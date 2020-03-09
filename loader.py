@@ -17,5 +17,8 @@ def load_csv(filename):
 
 filename = 'train.csv'
 dataset = load_csv(filename)
-for i in range(len(dataset)):
-    print(dataset[i])
+headers = dataset[0]
+print(headers)
+
+for i in range(1, len(dataset)):
+    print(i)
