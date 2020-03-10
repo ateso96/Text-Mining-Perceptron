@@ -1,11 +1,11 @@
 from nltk.stem import WordNetLemmatizer
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from nltk.corpus import stopwords
 import re
 
 from getRAW import loadData
 
-
+# Dejar el texto limpio
 def dataCleaner(text):
     wnl = WordNetLemmatizer()
     textAux = []
@@ -38,16 +38,25 @@ def dataCleaner(text):
 
     return textAux
 
-def toBoW(text):
+# Pasar de string a representacion bow en vector
+def stringToBoW(text):
     vectorizer = CountVectorizer(max_features=1500, min_df=5, max_df=0.7, stop_words=stopwords.words('english'))
     return vectorizer.fit_transform(text).toarray()
 
+# Pasar de bow a tdidf
+def bowToTFIDF(vector):
+    tfidfconverter = TfidfTransformer()
+    return tfidfconverter.fit_transform(vector).toarray()
 
 id, text, labels = loadData("data/train.csv")
 text = dataCleaner(text)
 for pos in range(len(id)):
     print(text[pos])
 
-textVector = toBoW(text)
+bowVector = stringToBoW(text)
 for pos in range(len(id)):
-    print(textVector[pos])
+    print(bowVector[pos])
+
+tfidfVector = bowToTFIDF(bowVector)
+for pos in range(len(id)):
+    print(tfidfVector[pos])
