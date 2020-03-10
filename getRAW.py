@@ -14,7 +14,3 @@ def loadData(file):
             label.append(row[2])  # Indicar la clasificación de cada pregunta
         return id[1:], text[1:], label[1:]
 
-
-id, text, labels = loadData("data/train.csv")
-for pos in range(len(id)):
-    print(labels[pos])
