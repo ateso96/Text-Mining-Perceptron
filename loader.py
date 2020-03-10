@@ -1,24 +1,17 @@
-from csv import reader
+import csv
 
-# Metodo para leer los csv con datos
-def load_csv(filename):
-    dataset = list()
-    with open(filename, 'r') as file:
-        csv_reader = reader(file)
-        for row in csv_reader:
-            if not row:
-                continue
-            dataset.append(row)
-    return dataset
+def loadData(file):
+    with open(file, encoding="utf8") as csv_file:
+        reader = csv.reader(csv_file, delimiter = ",", quotechar = '"')
+        id = []
+        text = []
+        label = []
+        for row in reader:
+            id.append(row[0])
+            text.append(row[1])
+            label.append(row[2])
+        return id[1:], text[1:], label[1:]
 
-# Crear las features
-
-# Crear los pesos para las instancias de test
-
-filename = 'train.csv'
-dataset = load_csv(filename)
-headers = dataset[0]
-print(headers)
-
-for i in range(1, len(dataset)):
-    print(i)
+id, text, labels = loadData("data/train.csv")
+for pos in range(len(id)):
+    print(labels[pos])
