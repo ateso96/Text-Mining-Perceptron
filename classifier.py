@@ -3,8 +3,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
 
 
-def split(data, percent):
-    x_train, x_test, y_train, y_test = train_test_split(data, test_size=percent, random_state=1)
+def split(data, labels, percent):
+    x_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=percent, random_state=1)
     return x_train, x_test, y_train, y_test
 
 def classifyMP(x_train, x_test, y_train, y_test):

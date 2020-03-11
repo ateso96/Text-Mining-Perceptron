@@ -81,11 +81,7 @@ def getDataVector(filePath):
     text = dataCleaner(text)
     labels = dataCleaner(labels)
 
-    # Juntar el texto con su clasificación para luego entrenar
-    data = id[:]
-    for i in range(len(data)):
-        data[i] = text[i] + ' ' + labels[i]
-        print(data[i])
+    text = stringToBoW(text)
+    labels = stringToBoW(labels)
 
-    data = stringToBoW(data)
-    return bowToTFIDF(data)
+    return bowToTFIDF(text), bowToTFIDF(labels)
