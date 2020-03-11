@@ -5,6 +5,7 @@ import re
 
 from getRAW import loadData
 
+
 # Dejar el texto limpio
 def dataCleaner(text):
     '''
@@ -45,6 +46,7 @@ def dataCleaner(text):
 
     return textAux
 
+
 # Pasar de string a representacion bow en vector
 def stringToBoW(text):
     '''
@@ -59,6 +61,7 @@ def stringToBoW(text):
     '''
     return vectorizer.fit_transform(text).toarray()
 
+
 # Pasar de bow a tdidf
 def bowToTFIDF(vector):
     '''
@@ -68,12 +71,21 @@ def bowToTFIDF(vector):
     tfidfconverter = TfidfTransformer()
     return tfidfconverter.fit_transform(vector).toarray()
 
-id, text, labels = loadData("data/train.csv")
-text = dataCleaner(text)
-for pos in range(len(id)):
-    print(text[pos])
 
-bow = stringToBoW(text)
-for pos in range(len(id)):
-    print(bow[pos])
+def getDataVector(filePath):
+    '''
+    :param filePath: path del fichero que contiene los datos
+    :return: el dataset en representacion tf
+    '''
+    id, text, labels = loadData(filePath)
+    text = dataCleaner(text)
+    labels = dataCleaner(labels)
 
+    # Juntar el texto con su clasificación para luego entrenar
+    data = id[:]
+    for i in range(len(data)):
+        data[i] = text[i] + ' ' + labels[i]
+        print(data[i])
+
+    data = stringToBoW(data)
+    return bowToTFIDF(data)
