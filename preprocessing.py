@@ -25,6 +25,12 @@ def dataCleaner(text):
         # Eliminar prefijo 'b'
         element = re.sub(r'^b\s+', '', element)
 
+        ###############################################
+        # DESDE AQUI TENGO DUDAS DE QUE DEBO ELIMINAR
+        # Eliminar los numeros
+        element = re.sub(r"\d", "", element)
+        ###############################################
+
         # Convertir a minusculas
         element = element.lower()
 
@@ -40,7 +46,16 @@ def dataCleaner(text):
 
 # Pasar de string a representacion bow en vector
 def stringToBoW(text):
-    vectorizer = CountVectorizer(max_features=1500, min_df=5, max_df=0.7, stop_words=stopwords.words('english'))
+    '''
+    :param text: Vector de Strings
+    :return: Vector con la representación en 0 y 1 de las palabras que aparecen
+    '''
+    vectorizer = CountVectorizer(max_features=1500, min_df=10, max_df=0.75, stop_words=stopwords.words('english'))
+    '''
+    max_features --> tamaño del diccionario
+    min_df --> minimo de apariciones de una palabra en todas las frases para tenerla en cuenta
+    max_df --> una palabra debe aparecer en ese porcentaje para tenerla en cuenta
+    '''
     return vectorizer.fit_transform(text).toarray()
 
 # Pasar de bow a tdidf
@@ -53,10 +68,7 @@ text = dataCleaner(text)
 for pos in range(len(id)):
     print(text[pos])
 
-bowVector = stringToBoW(text)
+bow = stringToBoW(text)
 for pos in range(len(id)):
-    print(bowVector[pos])
+    print(bow[pos])
 
-tfidfVector = bowToTFIDF(bowVector)
-for pos in range(len(id)):
-    print(tfidfVector[pos])
