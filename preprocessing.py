@@ -7,6 +7,10 @@ from getRAW import loadData
 
 # Dejar el texto limpio
 def dataCleaner(text):
+    '''
+    :param text: texto del csv
+    :return: texto sin caracteres raros, espacios, numeros...
+    '''
     wnl = WordNetLemmatizer()
     textAux = []
     for t in range(0, len(text)):
@@ -25,11 +29,8 @@ def dataCleaner(text):
         # Eliminar prefijo 'b'
         element = re.sub(r'^b\s+', '', element)
 
-        ###############################################
-        # DESDE AQUI TENGO DUDAS DE QUE DEBO ELIMINAR
         # Eliminar los numeros
         element = re.sub(r"\d", "", element)
-        ###############################################
 
         # Convertir a minusculas
         element = element.lower()
@@ -60,6 +61,10 @@ def stringToBoW(text):
 
 # Pasar de bow a tdidf
 def bowToTFIDF(vector):
+    '''
+    :param vector: vector de 1 y 0 en Bow
+    :return: representacion TF
+    '''
     tfidfconverter = TfidfTransformer()
     return tfidfconverter.fit_transform(vector).toarray()
 
