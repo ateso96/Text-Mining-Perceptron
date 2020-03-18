@@ -85,3 +85,8 @@ def getDataVector(filePath):
     labels = stringToBoW(labels)
 
     return bowToTFIDF(text), bowToTFIDF(labels)
+
+id, text, labels = loadData("data/train.csv")
+text = dataCleaner(text)
+for pos in range(len(id)):
+    print(text[pos])
