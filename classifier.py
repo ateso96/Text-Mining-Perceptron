@@ -1,3 +1,4 @@
+import pickle
 from random import uniform
 
 from sklearn.metrics import accuracy_score, precision_score, recall_score, classification_report, \
@@ -36,3 +37,6 @@ def classifyMP(x_train, x_test, y_train, y_test):
     print(r)
     print(multilabel_confusion_matrix(y_test, predictions))
     print(classification_report(y_test, predictions))
+
+    with open('text_classifier', 'wb') as picklefile:
+        pickle.dump(perceptron, picklefile)
