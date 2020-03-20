@@ -14,11 +14,12 @@ def split(data, labels, percent):
 
 
 def classifyMP(x_train, x_test, y_train, y_test):
-    cls = MLPClassifier(max_iter=1500,  random_state=0, learning_rate_init=0.005)
+    cls = MLPClassifier(max_iter=1500, random_state=0, learning_rate_init=0.005)
     parameter_space = {
-        'solver': ['sgd', 'adam', 'lbfgs'],
+        'hidden_layer_sizes': [(50, 50, 50), (50, 100, 50), (100,)],
+        # 'solver': ['sgd', 'adam', 'lbfgs'],
         'alpha': [0.0001, 0.00095, 0.05],
-        'learning_rate': ['adaptive'],
+        # 'learning_rate': ['adaptive'],
         'activation': ['identity', 'logistic', 'tanh', 'relu']
     }
 
