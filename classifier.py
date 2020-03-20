@@ -15,14 +15,15 @@ def split(data, labels, percent):
 
 
 def classifyMP(x_train, x_test, y_train, y_test):
-    cls = MLPClassifier(random_state=0)
+    cls = MLPClassifier()
     parameter_space = {
-        'max_iter': 100 * np.arange(10, 50),
-        'hidden_layer_sizes':np.arange(1, 20),
+        'max_iter': 100 * np.arange(10, 25),
+        'hidden_layer_sizes': [10 * (np.arange(10, 60), 10 * np.arange(1, 6))],
         'solver': ['lbfgs'],
-        'alpha': 10.0 ** -np.arange(1, 10),
+        'alpha': 10.0 ** -np.arange(1, 5),
         'learning_rate': ['adaptive'],
-        'activation': ['identity', 'logistic', 'tanh', 'relu']
+        'activation': ['identity', 'logistic', 'tanh', 'relu'],
+        'random_state': [0]
     }
 
     perceptron = GridSearchCV(cls, parameter_space, n_jobs=-1)
