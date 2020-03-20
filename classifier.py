@@ -1,4 +1,5 @@
 import pickle
+import numpy as np
 from random import uniform
 
 from sklearn.metrics import accuracy_score, precision_score, recall_score, classification_report, \
@@ -14,19 +15,21 @@ def split(data, labels, percent):
 
 
 def classifyMP(x_train, x_test, y_train, y_test):
-    cls = MLPClassifier(max_iter=1500, random_state=0, learning_rate_init=0.005)
+    cls = MLPClassifier(random_state=0)
     parameter_space = {
-        'hidden_layer_sizes': [(50, 50, 50), (50, 100, 50), (100,)],
-        # 'solver': ['sgd', 'adam', 'lbfgs'],
-        'alpha': [0.0001, 0.00095, 0.05],
-        # 'learning_rate': ['adaptive'],
+        'max_iter': 100 * np.arange(10, 50),
+        'hidden_layer_sizes':np.arange(1, 20),
+        'solver': ['lbfgs'],
+        'alpha': 10.0 ** -np.arange(1, 10),
+        'learning_rate': ['adaptive'],
         'activation': ['identity', 'logistic', 'tanh', 'relu']
     }
 
-    perceptron = GridSearchCV(cls, parameter_space, cv=3, scoring='accuracy')
+    perceptron = GridSearchCV(cls, parameter_space, n_jobs=-1)
     perceptron.fit(x_train, y_train)
 
     # Best paramete set
+    print("Score: ", perceptron.score(x_train, y_train))
     print('Best parameters found:\n', perceptron.best_params_)
 
     predictions = perceptron.predict(x_test)
