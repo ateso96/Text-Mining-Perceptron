@@ -86,7 +86,16 @@ def getDataVector(filePath):
 
     return bowToTFIDF(text), bowToTFIDF(labels)
 
-id, text, labels = loadData("data/train.csv")
-text = dataCleaner(text)
-for pos in range(len(id)):
-    print(text[pos])
+def getDataVectorPredict(data):
+    '''
+    :param filePath: path del fichero que contiene los datos
+    :return: el dataset en representacion tf
+    '''
+    text = dataCleaner(data)
+    for i in range(len(text)):
+        print(text[i])
+
+    text = stringToBoW(text)
+
+    return bowToTFIDF(text)
+
