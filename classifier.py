@@ -6,8 +6,6 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, class
     multilabel_confusion_matrix
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.neural_network import MLPClassifier
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
 from sklearn.utils.optimize import _check_optimize_result
 
 
@@ -29,15 +27,11 @@ def classifyMP(x_train, x_test, y_train, y_test):
     }
 
     perceptron = GridSearchCV(cls, parameter_space, n_jobs=-1)
-    pipe = make_pipeline(StandardScaler(), perceptron)
-    #perceptron.fit(x_train, y_train)
-    pipe.fit(x_train,y_train)
+    perceptron.fit(x_train, y_train)
 
     # Best paramete set
     print("Score: ", perceptron.score(x_train, y_train))
     print('Best parameters found:\n', perceptron.best_params_)
-
-
 
     predictions = perceptron.predict(x_test)
     a = accuracy_score(y_test, predictions)
@@ -57,4 +51,4 @@ def makePredictions(data):
         model = pickle.load(training_model)
     for i in range(len(data)):
         print(data[i])
-        model.predict(data[i].reshape(1, -1))
+        model.predict(data[i])
