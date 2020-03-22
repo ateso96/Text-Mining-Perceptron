@@ -48,7 +48,7 @@ def dataCleaner(text):
 
 
 # Pasar de string a representacion bow en vector
-def stringToBoW(text):
+def stringToBoW(text, textPreds):
     '''
     :param text: Vector de Strings
     :return: Vector con la representación en 0 y 1 de las palabras que aparecen
@@ -59,32 +59,33 @@ def stringToBoW(text):
     min_df --> minimo de apariciones de una palabra en todas las frases para tenerla en cuenta
     max_df --> una palabra debe aparecer en ese porcentaje para tenerla en cuenta
     '''
-    return vectorizer.fit_transform(text).toarray()
+    return vectorizer.fit_transform(text).toarray(), vectorizer.fit_transform(textPreds).toarray()
 
 
 # Pasar de bow a tdidf
-def bowToTFIDF(vector):
+def bowToTFIDF(vector, vectorPreds):
     '''
     :param vector: vector de 1 y 0 en Bow
     :return: representacion TF
     '''
     tfidfconverter = TfidfTransformer()
-    return tfidfconverter.fit_transform(vector).toarray()
+    return tfidfconverter.fit_transform(vector).toarray(), tfidfconverter.fit_transform(vectorPreds).toarray()
 
 
-def getDataVector(filePath):
+def getDataVector(file, filePreds):
     '''
     :param filePath: path del fichero que contiene los datos
     :return: el dataset en representacion tf
     '''
-    id, text, labels = loadData(filePath)
+    id, text, labels = loadData(file)
+    idP, textP, labelsP = loadData(filePreds)
     text = dataCleaner(text)
-    labels = dataCleaner(labels)
+    textP = dataCleaner(textP)
 
-    text = stringToBoW(text)
-    labels = stringToBoW(labels)
+    text, textP = stringToBoW(text, textP)
+    vector, vectorPreds = bowToTFIDF(text, textP)
 
-    return bowToTFIDF(text), bowToTFIDF(labels)
+    return vector, vectorPreds
 
 def getDataVectorPredict(data):
     '''
