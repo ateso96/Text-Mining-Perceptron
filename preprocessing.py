@@ -1,50 +1,43 @@
 from nltk.stem import WordNetLemmatizer
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
-import re
+from nltk.corpus import wordnet as wn
+from nltk import pos_tag
+from collections import defaultdict
 
 from getRAW import loadData
 
 
 # Dejar el texto limpio
-def dataCleaner(text):
+def rawToVector(text):
     '''
     :param text: texto del csv
     :return: texto sin caracteres raros, espacios, numeros...
     '''
-    wnl = WordNetLemmatizer()
-    textAux = []
-    for t in range(0, len(text)):
-        # Eliminar caracteres especiales
-        element = re.sub(r'\W', ' ', str(text[t]))
+    res = text
 
-        # Eliminar caracteres unicos
-        element = re.sub(r'\s+[a-zA-Z]\s+', ' ', element)
+    # Convertir a minusculas
+    text = [entry.lower() for entry in text]
 
-        # Eliminar caracteres unicos desde el inicio
-        element = re.sub(r'\^[a-zA-Z]\s+', ' ', element)
+    # Convertir texto en array de strings
+    text = [word_tokenize(entry) for entry in text]
 
-        # Eliminar espacios multiples
-        element = re.sub(r'\s+', ' ', element, flags=re.I)
+    # Eliminar palabras raras
+    tag_map = defaultdict(lambda  : wn.NOUN)
+    tag_map['J'] = wn.ADJ
+    tag_map['V'] = wn.VERB
+    tag_map['R'] = wn.ADV
+    for ind, entry in enumerate(text):
+        textAux = []
+        wl = WordNetLemmatizer()
+        for word, tag in pos_tag(entry):
+            if word not in stopwords.words('english') and word.isalpha():
+                wordAux = wl.lemmatize(word, tag_map[tag[0]])
+                textAux.append(wordAux)
+        res[ind] = str(textAux)
 
-        # Eliminar prefijo 'b'
-        element = re.sub(r'^b\s+', '', element)
-
-        # Eliminar los numeros
-        element = re.sub(r"\d", "", element)
-
-        # Convertir a minusculas
-        element = element.lower()
-
-        # Lemmatization
-        element = element.split()
-
-        element = [wnl.lemmatize(word) for word in element]
-        element = ' '.join(element)
-
-        textAux.append(element)
-
-    return textAux
+    return res
 
 
 # Pasar de string a representacion bow en vector
@@ -79,8 +72,8 @@ def getDataVector(file, filePreds):
     '''
     id, text, labels = loadData(file)
     idP, textP, labelsP = loadData(filePreds)
-    text = dataCleaner(text)
-    textP = dataCleaner(textP)
+    text = rawToVector(text)
+    textP = rawToVector(textP)
 
     text, textP = stringToBoW(text, textP)
     vector, vectorPreds = bowToTFIDF(text, textP)
@@ -92,7 +85,7 @@ def getDataVectorPredict(data):
     :param filePath: path del fichero que contiene los datos
     :return: el dataset en representacion tf
     '''
-    text = dataCleaner(data)
+    text = rawToVector(data)
     for i in range(len(text)):
         print(text[i])
 
