@@ -39,7 +39,7 @@ def rawToVector(text):
     return res
 
 
-# Pasar de bow a tdidf
+# Obtener un diccionario
 def getDictionary(vector):
     '''
     :param vector: vector Bow
@@ -49,3 +49,6 @@ def getDictionary(vector):
     dictionary.fit(vector)
     return dictionary
 
+# Usando el diccionario, obtener el tfidf
+def tfidf(vector, dictionary):
+    return dictionary.transform(vector)
