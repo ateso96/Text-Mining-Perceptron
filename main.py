@@ -1,5 +1,6 @@
 import pickle
 
+from getRAW import loadData
 from preprocessing import *
 from classifier import split, classifyMP, makePredictions
 
@@ -9,6 +10,7 @@ id, text, labels = loadData(file)
 idPreds, textPreds, labelsPreds = loadData(filePreds)
 
 data = rawToVector(text)
+dictionary = getDictionary(data)
 
 x_train, x_test, y_train, y_test = split(data, labels, 0.3)
 #classifyMP(x_train, x_test, y_train, y_test)
