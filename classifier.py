@@ -49,6 +49,4 @@ def classifyMP(x_train, x_test, y_train, y_test):
 def makePredictions(data):
     with open('text_classifier', 'rb') as training_model:
         model = pickle.load(training_model)
-    for i in range(len(data)):
-        print(data[i])
-        model.predict(data[i])
+    model.predict(data)
