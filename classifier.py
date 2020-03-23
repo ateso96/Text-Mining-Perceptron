@@ -15,30 +15,36 @@ def split(data, labels, percent):
 def classifyMP(x_train, x_test, y_train, y_test):
     cls = MLPClassifier()
     parameter_space = {
-        'max_iter': [1000],
-        'hidden_layer_sizes': [(100, 10)],
+        'max_iter': [1000, 5000, 10000],
+        'hidden_layer_sizes': [(100, 10), (200, 20), (300, 30), (400, 40), (500, 50), (600, 60), (700, 70), (800, 80),
+                               (900, 90), (1000, 100)],
         'solver': ['lbfgs'],
-        'alpha': 10.0 ** -np.arange(1),
+        'alpha': 10.0 ** -np.arange(1, 5),
         'learning_rate': ['adaptive'],
-        'activation': ['identity'],
+        'activation': ['identity', 'logistic', 'tanh', 'relu'],
         'random_state': [0]
     }
 
     perceptron = GridSearchCV(cls, parameter_space, n_jobs=-1)
     perceptron.fit(x_train, y_train)
 
-    # Best paramete set
-    print("\n--> Score: ", perceptron.score(x_train, y_train))
-    print('--> Best parameters:\n', perceptron.best_params_, '\n')
+    results = "************************************" \
+              "\nPERCEPTRON TREC-6 CLASSIFIER" \
+              "\n************************************"
+    results += "\n--> Score: ", perceptron.score(x_train, y_train)
+    results += '\n--> Best parameters:\n', perceptron.best_params_, '\n'
 
     predictions = perceptron.predict(x_test)
-    print("\n--> Accuraccy: ", accuracy_score(y_test, predictions))
-    print("\n--> Precision: ", precision_score(y_test, predictions, average='weighted'))
-    print("\n--> Recall: ", recall_score(y_test, predictions, average='weighted'))
+    results += "\n--> Accuraccy: ", accuracy_score(y_test, predictions)
+    results += "\n--> Precision: ", precision_score(y_test, predictions, average='weighted')
+    results += "\n--> Recall: ", recall_score(y_test, predictions, average='weighted')
 
-    print("\n--> Classification Report: \n",classification_report(y_test, predictions))
+    results += "\n--> Classification Report: \n",classification_report(y_test, predictions)
 
-    print("\n--> Confusion Matrix: \n",multilabel_confusion_matrix(y_test, predictions))
+    results += "\n--> Confusion Matrix: \n",multilabel_confusion_matrix(y_test, predictions)
+
+    with open('resultados.txt', 'wb') as picklefile:
+        pickle.dump(results, picklefile)
 
     with open('modeloPerceptron', 'wb') as picklefile:
         pickle.dump(perceptron, picklefile)
@@ -46,4 +52,4 @@ def classifyMP(x_train, x_test, y_train, y_test):
 def makePredictions(data):
     with open('modeloPerceptron', 'rb') as training_model:
         model = pickle.load(training_model)
-    model.predict(data)
+    return model.predict(data)

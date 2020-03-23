@@ -17,4 +17,11 @@ with open('dictionary', 'wb') as picklefile:
 data = tfidf(data, dictionary)
 
 x_train, x_test, y_train, y_test = split(data, labels, 0.3)
-classifyMP(x_train, x_test, y_train, y_test)
+#classifyMP(x_train, x_test, y_train, y_test)
+
+textPredsAux = textPreds.copy()
+dataPreds = rawToVector(textPreds)
+dataPreds = tfidf(dataPreds, dictionary)
+predictions = makePredictions(dataPreds)
+for i in range(len(textPredsAux)):
+	print("%s --> %s" % (textPredsAux[i], predictions[i]))
