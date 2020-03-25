@@ -16,17 +16,16 @@ def split(data, labels, percent):
 def classifyMP(x_train, x_test, y_train, y_test):
     cls = MLPClassifier()
     parameter_space = {
-        'max_iter': [1000, 5000, 10000],
-        'hidden_layer_sizes': [(100, 10), (200, 20), (300, 30), (400, 40), (500, 50), (600, 60), (700, 70), (800, 80),
-                               (900, 90), (1000, 100)],
-        'solver': ['lbfgs'],
-        'alpha': 10.0 ** -np.arange(1, 5),
-        'learning_rate': ['adaptive'],
+        'max_iter': [3000, 4000, 5000],
+        'hidden_layer_sizes': [(400, 40), (500, 50), (600, 60), (700, 70), (800, 80)],
+        'solver': ['adam'],
+        'alpha': 10.0 ** -np.arange(1, 3),
         'activation': ['identity', 'logistic', 'tanh', 'relu'],
         'random_state': [0]
     }
 
-    perceptron = GridSearchCV(cls, parameter_space, n_jobs=-1)
+
+    perceptron = GridSearchCV(cls, parameter_space, n_jobs=-1, scoring='f1_weighted')
     perceptron.fit(x_train, y_train)
 
     results = "************************************" \
