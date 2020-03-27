@@ -18,8 +18,6 @@ def classifyMP(x_train, x_test, y_train, y_test):
     parameter_space = {
         'max_iter': [200, 500, 1000],
         'hidden_layer_sizes': [(500, 50), (600, 60)],
-        'alpha': 10.0 ** -np.arange(1, 3),
-        'random_state': [0, 1]
     }
 
     perceptron = GridSearchCV(cls, parameter_space, n_jobs=-1, scoring='f1_weighted')
