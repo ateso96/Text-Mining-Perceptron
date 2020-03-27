@@ -16,8 +16,8 @@ def split(data, labels, percent):
 def classifyMP(x_train, x_test, y_train, y_test):
     cls = MLPClassifier()
     parameter_space = {
-        'max_iter': [200, 500, 1000],
-        'hidden_layer_sizes': [(500, 50), (600, 60)],
+        'max_iter': [1000, 2000],
+        'hidden_layer_sizes': [(550, 55), (600, 60), (650, 65)],
     }
 
     perceptron = GridSearchCV(cls, parameter_space, n_jobs=-1, scoring='f1_weighted')
