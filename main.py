@@ -22,6 +22,6 @@ classifyMP(x_train, x_test, y_train, y_test)
 textPredsAux = textPreds.copy()
 dataPreds = rawToVector(textPreds)
 dataPreds = tfidf(dataPreds, dictionary)
-predictions = makePredictions(dataPreds)
-for i in range(len(textPredsAux)):
-	print("%s --> %s" % (textPredsAux[i], predictions[i]))
+#predictions = makePredictions(dataPreds)
+#for i in range(len(textPredsAux)):
+#	print("%s --> %s" % (textPredsAux[i], predictions[i]))
