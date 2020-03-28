@@ -1,3 +1,4 @@
+from builtins import dict
 from collections import defaultdict
 
 from nltk import pos_tag
@@ -47,6 +48,7 @@ def getDictionary(vector):
     '''
     dictionary = TfidfVectorizer(max_features=5000)
     dictionary.fit(vector)
+    print(len(dictionary.vocabulary_))
     return dictionary
 
 # Usando el diccionario, obtener el tfidf

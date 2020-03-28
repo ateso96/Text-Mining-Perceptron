@@ -14,26 +14,29 @@ def split(data, labels, percent):
 
 
 def classifyMP(x_train, x_test, y_train, y_test):
-    cls = MLPClassifier(random_state=1)
+    cls = MLPClassifier()
     parameter_space = {
-        'hidden_layer_sizes': [(9, 4), (17, 8), (33, 16)],
-        'solver': ['lbfgs', 'sgd', 'adam'],
-        'alpha': 10.0 ** -np.arange(1, 10),
-        'random_state': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        'max_iter': [1100, 1200, 1300, 1400, 1500],
+        # 'hidden_layer_sizes': [(486, 54), (486, 54, 6)],
+        'hidden_layer_sizes': [(10, 10, 10), (10, 10), 10]
     }
 
-    perceptron = GridSearchCV(cls, parameter_space, n_jobs=-1, cv=10, scoring='f1_weighted')
-    perceptron.fit(x_train, y_train)
+    clf = GridSearchCV(cls, parameter_space, n_jobs=-1, cv=10, scoring='f1_weighted')
+    clf.fit(x_train, y_train)
+
+    parameters = clf.best_params_
 
     results = "************************************" \
               "\nPERCEPTRON TREC-6 CLASSIFIER" \
               "\n************************************"
-    results += "\n--> Best F1 Score: " + str(perceptron.best_score_)
-    results += '\n--> Best parameters:\n' + str(perceptron.best_params_) + '\n'
+    results += "\n--> Best F1 Score: " + str(clf.best_score_)
+    results += '\n--> Best parameters:\n' + str(clf.best_params_) + '\n'
 
-    print(perceptron.param_grid)
-
+    perceptron = MLPClassifier(max_iter=parameters['max_iter'], random_state=0,
+                               hidden_layer_sizes=parameters['hidden_layer_sizes'])
+    perceptron.fit(x_train, y_train)
     predictions = perceptron.predict(x_test)
+
     results += "\n--> Accuraccy: " + str(accuracy_score(y_test, predictions))
     results += "\n--> Precision: " + str(precision_score(y_test, predictions, average='weighted'))
     results += "\n--> Recall: " + str(precision_score(y_test, predictions, average='weighted'))
