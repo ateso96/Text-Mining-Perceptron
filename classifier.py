@@ -16,9 +16,9 @@ def split(data, labels, percent):
 def classifyMP(x_train, x_test, y_train, y_test):
     cls = MLPClassifier()
     parameter_space = {
-        'max_iter': [1100, 1200, 1300, 1400, 1500],
-        # 'hidden_layer_sizes': [(486, 54), (486, 54, 6)],
-        'hidden_layer_sizes': [(10, 10, 10), (10, 10), 10]
+        'max_iter': [2400, 2500, 2600],
+        'hidden_layer_sizes': [(8, 5, 10), (8, 5), 8, 9],
+        'solver': ['lbfgs', 'sgd', 'adam']
     }
 
     clf = GridSearchCV(cls, parameter_space, n_jobs=-1, cv=10, scoring='f1_weighted')
