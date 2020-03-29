@@ -19,8 +19,6 @@ def classifyMP(x_train, x_test, y_train, y_test):
         'max_iter': [2500, 3000],
         'hidden_layer_sizes': [(32, 16), (16, 9), (15, 8), 7, 8, 9, 10],
         'solver': ['lbfgs', 'sgd', 'adam'],
-        'random_state': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-        'alpha': 10 ** -np.arange(1, 5)
     }
 
     clf = GridSearchCV(cls, parameter_space, n_jobs=-1, cv=10, scoring='f1_weighted')
@@ -34,9 +32,8 @@ def classifyMP(x_train, x_test, y_train, y_test):
     results += "\n--> Best F1 Score: " + str(clf.best_score_)
     results += '\n--> Best parameters:\n' + str(clf.best_params_) + '\n'
 
-    perceptron = MLPClassifier(max_iter=parameters['max_iter'], random_state=parameters['random_state'],
-                               hidden_layer_sizes=parameters['hidden_layer_sizes'], solver=parameters['solver'],
-                               alpha=parameters['alpha'])
+    perceptron = MLPClassifier(max_iter=parameters['max_iter'], random_state=0,
+                               hidden_layer_sizes=parameters['hidden_layer_sizes'], solver=parameters['solver'])
     perceptron.fit(x_train, y_train)
     predictions = perceptron.predict(x_test)
 
