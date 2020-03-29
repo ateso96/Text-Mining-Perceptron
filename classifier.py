@@ -21,8 +21,7 @@ def classifyMP(x_train, x_test, y_train, y_test):
         'solver': ['lbfgs','sgd', 'adam'],
         'learning_rate': ['constant', 'invscaling', 'adaptive'],
         'alpha': 10.0 ** -np.arange(1, 4),
-        'activation': ['identity',  'logistic', 'tanh', 'relu'],
-        'random_state': np.arange(0, 10)
+        'activation': ['identity',  'logistic', 'tanh', 'relu']
     }
 
     clf = GridSearchCV(cls, parameter_space, n_jobs=-1, cv=10, scoring='f1_weighted')
@@ -36,7 +35,7 @@ def classifyMP(x_train, x_test, y_train, y_test):
     results += "\n--> Best F1 Score: " + str(clf.best_score_)
     results += '\n--> Best parameters:\n' + str(clf.best_params_) + '\n'
 
-    perceptron = MLPClassifier(max_iter=parameters['max_iter'], random_state=parameters['random_state'],
+    perceptron = MLPClassifier(max_iter=parameters['max_iter'], random_state=1,
                                hidden_layer_sizes=parameters['hidden_layer_sizes'], solver=parameters['solver'],
                                learning_rate=parameters['learning_rate'], alpha=parameters['alpha'],
                                activation=parameters['activation'])
