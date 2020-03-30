@@ -16,12 +16,10 @@ def split(data, labels, percent):
 def classifyMP(x_train, x_test, y_train, y_test):
     cls = MLPClassifier()
     parameter_space = {
-        'max_iter': [100, 200],
-        'hidden_layer_sizes': [(128, 64, 32), (64, 32), 9, 10, 15, 20],
-        'solver': ['lbfgs','sgd', 'adam'],
-        'learning_rate': ['constant', 'invscaling', 'adaptive'],
-        'alpha': 10.0 ** -np.arange(1, 4),
-        'activation': ['identity',  'logistic', 'tanh', 'relu']
+        'max_iter': [100, 200, 500, 1000],
+        'hidden_layer_sizes': [(50, 50), 9, 10, 100],
+        'random_state': 42,
+        'solver': 'lbfgs'
     }
 
     clf = GridSearchCV(cls, parameter_space, n_jobs=-1, cv=10, scoring='f1_weighted')
@@ -35,10 +33,8 @@ def classifyMP(x_train, x_test, y_train, y_test):
     results += "\n--> Best F1 Score: " + str(clf.best_score_)
     results += '\n--> Best parameters:\n' + str(clf.best_params_) + '\n'
 
-    perceptron = MLPClassifier(max_iter=parameters['max_iter'], random_state=1,
-                               hidden_layer_sizes=parameters['hidden_layer_sizes'], solver=parameters['solver'],
-                               learning_rate=parameters['learning_rate'], alpha=parameters['alpha'],
-                               activation=parameters['activation'])
+    perceptron = MLPClassifier(max_iter=parameters['max_iter'], random_state=42,
+                               hidden_layer_sizes=parameters['hidden_layer_sizes'], solver='lbfgs')
     perceptron.fit(x_train, y_train)
     predictions = perceptron.predict(x_test)
 
