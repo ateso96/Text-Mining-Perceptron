@@ -16,11 +16,13 @@ def split(data, labels, percent):
 def classifyMP(x_train, x_test, y_train, y_test):
     cls = MLPClassifier()
     parameter_space = {
-        'max_iter': [200],
-        'hidden_layer_sizes': [512],
-        'random_state': [42],
-        'solver': ['sgd'],
-        'shuffle':[True]
+        'hidden_layer_sizes': [50, 100, 256],
+        'random_state': [1],
+        'learning_rate_init': 10.0 ** -np.arange(0, 3),
+        'verbose': [True],
+        'activation': ['logistic'],
+        'alpha': 10.0 ** -np.arange(3, 4),
+        'tol': 1e-3
     }
 
     clf = GridSearchCV(cls, parameter_space, n_jobs=-1, cv=10, scoring='accuracy')
@@ -34,9 +36,10 @@ def classifyMP(x_train, x_test, y_train, y_test):
     results += "\n--> Best F1 Score: " + str(clf.best_score_)
     results += '\n--> Best parameters:\n' + str(clf.best_params_) + '\n'
 
-    perceptron = MLPClassifier(max_iter=200, random_state=42,
-                               hidden_layer_sizes=(256,), solver='adam', shuffle=True,
-                               learning_rate='adaptive')
+    perceptron = MLPClassifier(random_state=1, learning_rate_init=parameters['learning_rate_init'],
+                               hidden_layer_sizes=(256,), shuffle=True, verbose=True,
+                               activation=parameters['activation'], alpha=parameters['alpha'],
+                               tol=parameters['tol'])
 
     cv = cross_val_score(perceptron, x_train, y_train, cv=10)
     perceptron.fit(x_train, y_train)
