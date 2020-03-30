@@ -3,7 +3,7 @@ import pickle
 import numpy as np
 from sklearn.metrics import accuracy_score, precision_score, recall_score, classification_report, \
     multilabel_confusion_matrix, plot_confusion_matrix
-from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
 from sklearn.neural_network import MLPClassifier
 import matplotlib.pyplot as plt
 
@@ -16,13 +16,14 @@ def split(data, labels, percent):
 def classifyMP(x_train, x_test, y_train, y_test):
     cls = MLPClassifier()
     parameter_space = {
-        'max_iter': [100, 200, 500, 1000],
-        'hidden_layer_sizes': [(50, 50), 9, 10, 100],
-        'random_state': 42,
-        'solver': 'lbfgs'
+        'max_iter': [200],
+        'hidden_layer_sizes': [512],
+        'random_state': [42],
+        'solver': ['sgd'],
+        'shuffle':[True]
     }
 
-    clf = GridSearchCV(cls, parameter_space, n_jobs=-1, cv=10, scoring='f1_weighted')
+    clf = GridSearchCV(cls, parameter_space, n_jobs=-1, cv=10, scoring='accuracy')
     clf.fit(x_train, y_train)
 
     parameters = clf.best_params_
@@ -33,12 +34,15 @@ def classifyMP(x_train, x_test, y_train, y_test):
     results += "\n--> Best F1 Score: " + str(clf.best_score_)
     results += '\n--> Best parameters:\n' + str(clf.best_params_) + '\n'
 
-    perceptron = MLPClassifier(max_iter=parameters['max_iter'], random_state=42,
-                               hidden_layer_sizes=parameters['hidden_layer_sizes'], solver='lbfgs')
+    perceptron = MLPClassifier(max_iter=200, random_state=42,
+                               hidden_layer_sizes=(256,), solver='adam', shuffle=True,
+                               learning_rate='adaptive')
+
+    cv = cross_val_score(perceptron, x_train, y_train, cv=10)
     perceptron.fit(x_train, y_train)
     predictions = perceptron.predict(x_test)
 
-    results += "\n--> Accuraccy: " + str(accuracy_score(y_test, predictions))
+    results += "\n--> Accuraccy: " + str(accuracy_score(y_test, cv))
     results += "\n--> Precision: " + str(precision_score(y_test, predictions, average='weighted'))
     results += "\n--> Recall: " + str(precision_score(y_test, predictions, average='weighted'))
 
