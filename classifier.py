@@ -16,13 +16,13 @@ def split(data, labels, percent):
 def classifyMP(x_train, x_test, y_train, y_test):
     cls = MLPClassifier()
     parameter_space = {
-        'hidden_layer_sizes': [50, 100, 256],
+        'hidden_layer_sizes': [(256, 128), 256],
         'random_state': [1],
         'learning_rate_init': 10.0 ** -np.arange(0, 3),
         'verbose': [True],
         'activation': ['logistic'],
-        'alpha': 10.0 ** -np.arange(3, 4),
-        'tol': 1e-3
+        'alpha': 10.0 ** -np.arange(1, 5),
+        'tol': [1e-2]
     }
 
     clf = GridSearchCV(cls, parameter_space, n_jobs=-1, cv=10, scoring='accuracy')
@@ -37,7 +37,7 @@ def classifyMP(x_train, x_test, y_train, y_test):
     results += '\n--> Best parameters:\n' + str(clf.best_params_) + '\n'
 
     perceptron = MLPClassifier(random_state=1, learning_rate_init=parameters['learning_rate_init'],
-                               hidden_layer_sizes=(256,), shuffle=True, verbose=True,
+                               hidden_layer_sizes=parameters['hidden_layer_sizes'], shuffle=True, verbose=True,
                                activation=parameters['activation'], alpha=parameters['alpha'],
                                tol=parameters['tol'])
 
@@ -45,7 +45,7 @@ def classifyMP(x_train, x_test, y_train, y_test):
     perceptron.fit(x_train, y_train)
     predictions = perceptron.predict(x_test)
 
-    results += "\n--> Accuraccy: " + str(accuracy_score(y_test, cv))
+    results += "\n--> Accuraccy: " + str(accuracy_score(y_test, predictions))
     results += "\n--> Precision: " + str(precision_score(y_test, predictions, average='weighted'))
     results += "\n--> Recall: " + str(precision_score(y_test, predictions, average='weighted'))
 
