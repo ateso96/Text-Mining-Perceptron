@@ -17,14 +17,15 @@ def split(data, labels, percent):
 def classifyMP(x_train, x_test, y_train, y_test):
     cls = MLPClassifier()
     parameter_space = {
-        'hidden_layer_sizes': [(10, 6), (15, 6), (20, 6), (20, 10, 6)],
+        'hidden_layer_sizes': [(10, 12, 6), (8, 10, 6)],
         'random_state': [1],
         'learning_rate_init': 10.0 ** -np.arange(1, 5),
         'verbose': [True],
         'activation': ['logistic', 'relu'],
         'alpha': 10.0 ** -np.arange(1, 5),
-        'tol': [1e-2],
-        'early_stopping': [True]
+        'tol': [1e-2, 1e-3],
+        'early_stopping': [True],
+        'solver': ['sgd', 'adam']
     }
 
     clf = GridSearchCV(cls, parameter_space, n_jobs=-1, cv=10, scoring='accuracy')
@@ -78,7 +79,7 @@ def makePredictionsPerceptron(data):
     return model.predict(data)
 
 def classifyBaseline(x_train, x_test, y_train, y_test):
-    cls = DummyClassifier(strategy='most_frequent', random_state=1)
+    cls = DummyClassifier(strategy='stratified', random_state=1)
 
     results = "************************************" \
               "\nBASELINE TREC-6 CLASSIFIER" \
