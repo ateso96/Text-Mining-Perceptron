@@ -17,7 +17,7 @@ def split(data, labels, percent):
 def classifyMP(x_train, x_test, y_train, y_test):
     cls = MLPClassifier()
     parameter_space = {
-        'hidden_layer_sizes': [(10, 12, 6), (8, 10, 6)],
+        'hidden_layer_sizes': [100, (531, 56), 8, (8, 7)],
         'random_state': [1],
         'learning_rate_init': 10.0 ** -np.arange(1, 5),
         'verbose': [True],
@@ -26,7 +26,7 @@ def classifyMP(x_train, x_test, y_train, y_test):
         'tol': [1e-2, 1e-3],
         'early_stopping': [True],
         'solver': ['sgd', 'adam'],
-        'learning_rate': ['constant','invscaling','adaptive']
+        'learning_rate': ['constant', 'invscaling', 'adaptive']
     }
 
     clf = GridSearchCV(cls, parameter_space, n_jobs=-1, cv=10, scoring='accuracy')
@@ -79,6 +79,7 @@ def makePredictionsPerceptron(data):
     with open('results/modeloPerceptron', 'rb') as training_model:
         model = pickle.load(training_model)
     return model.predict(data)
+
 
 def classifyBaseline(x_train, x_test, y_train, y_test):
     cls = DummyClassifier(strategy='stratified', random_state=1)

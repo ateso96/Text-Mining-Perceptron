@@ -51,6 +51,7 @@ def getDictionary(vector):
     print(len(dictionary.vocabulary_))
     return dictionary
 
+
 # Usando el diccionario, obtener el tfidf
 def tfidf(vector, dictionary):
     return dictionary.transform(vector)
