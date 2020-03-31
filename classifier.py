@@ -25,7 +25,8 @@ def classifyMP(x_train, x_test, y_train, y_test):
         'alpha': 10.0 ** -np.arange(1, 5),
         'tol': [1e-2, 1e-3],
         'early_stopping': [True],
-        'solver': ['sgd', 'adam']
+        'solver': ['sgd', 'adam'],
+        'learning_rate': ['constant','invscaling','adaptive']
     }
 
     clf = GridSearchCV(cls, parameter_space, n_jobs=-1, cv=10, scoring='accuracy')
@@ -42,7 +43,8 @@ def classifyMP(x_train, x_test, y_train, y_test):
     perceptron = MLPClassifier(random_state=1, learning_rate_init=parameters['learning_rate_init'],
                                hidden_layer_sizes=parameters['hidden_layer_sizes'], shuffle=True, verbose=True,
                                activation=parameters['activation'], alpha=parameters['alpha'],
-                               tol=parameters['tol'], early_stopping=True)
+                               tol=parameters['tol'], early_stopping=True, solver=parameters['solver'],
+                               learning_rate=parameters['learning_rate_init'])
 
     perceptron.fit(x_train, y_train)
     predictions = perceptron.predict(x_test)
