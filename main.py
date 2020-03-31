@@ -1,7 +1,6 @@
-import pickle
+from classifier import *
 from getRAW import loadData
 from preprocessing import *
-from classifier import split, classifyMP, makePredictions
 
 file = "data/train.csv"
 filePreds = "data/test_unk.csv"
@@ -19,9 +18,11 @@ data = tfidf(data, dictionary)
 x_train, x_test, y_train, y_test = split(data, labels, 0.3)
 classifyMP(x_train, x_test, y_train, y_test)
 
+classifyBaseline(x_train, x_test, y_train, y_test)
+
 textPredsAux = textPreds.copy()
 dataPreds = rawToVector(textPreds)
 dataPreds = tfidf(dataPreds, dictionary)
-#predictions = makePredictions(dataPreds)
+#predictions = makePredictionsPerceptron(dataPreds)
 #for i in range(len(textPredsAux)):
 #	print("%s --> %s" % (textPredsAux[i], predictions[i]))
