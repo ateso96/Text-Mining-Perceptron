@@ -1,12 +1,12 @@
 import pickle
 
+import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.dummy import DummyClassifier
-from sklearn.metrics import accuracy_score, precision_score, recall_score, classification_report, \
-    multilabel_confusion_matrix, plot_confusion_matrix
-from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score, cross_val_predict
+from sklearn.metrics import accuracy_score, precision_score, classification_report, \
+    plot_confusion_matrix
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.neural_network import MLPClassifier
-import matplotlib.pyplot as plt
 
 
 def split(data, labels, percent):
@@ -17,16 +17,16 @@ def split(data, labels, percent):
 def classifyMP(x_train, x_test, y_train, y_test):
     cls = MLPClassifier()
     parameter_space = {
-        'hidden_layer_sizes': [100, (531, 56), 8, (8, 7)],
+        'hidden_layer_sizes': [100, (100, 60), 10, (10, 8)],
         'random_state': [1],
         'learning_rate_init': 10.0 ** -np.arange(1, 5),
         'verbose': [True],
         'activation': ['logistic', 'relu'],
         'alpha': 10.0 ** -np.arange(1, 5),
         'tol': [1e-2, 1e-3],
-        'early_stopping': [True],
-        'solver': ['sgd', 'adam'],
-        'learning_rate': ['constant', 'invscaling', 'adaptive']
+        'early_stopping': [True]
+        #'solver': ['sgd', 'adam'],
+        #'learning_rate': ['constant', 'invscaling', 'adaptive']
     }
 
     clf = GridSearchCV(cls, parameter_space, n_jobs=-1, cv=10, scoring='accuracy')
@@ -43,8 +43,7 @@ def classifyMP(x_train, x_test, y_train, y_test):
     perceptron = MLPClassifier(random_state=1, learning_rate_init=parameters['learning_rate_init'],
                                hidden_layer_sizes=parameters['hidden_layer_sizes'], shuffle=True, verbose=True,
                                activation=parameters['activation'], alpha=parameters['alpha'],
-                               tol=parameters['tol'], early_stopping=True, solver=parameters['solver'],
-                               learning_rate=parameters['learning_rate_init'])
+                               tol=parameters['tol'], early_stopping=True)
 
     perceptron.fit(x_train, y_train)
     predictions = perceptron.predict(x_test)

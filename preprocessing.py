@@ -1,4 +1,3 @@
-from builtins import dict
 from collections import defaultdict
 
 from nltk import pos_tag
