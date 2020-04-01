@@ -1,3 +1,5 @@
+import pickle
+import sys
 from collections import defaultdict
 
 from nltk import pos_tag
@@ -47,10 +49,33 @@ def getDictionary(vector):
     '''
     dictionary = TfidfVectorizer(max_features=5000)
     dictionary.fit(vector)
-    print(len(dictionary.vocabulary_))
+    print("Tamaño del diccionario: ", len(dictionary.vocabulary_))
     return dictionary
 
 
 # Usando el diccionario, obtener el tfidf
 def tfidf(vector, dictionary):
     return dictionary.transform(vector)
+
+
+# Argumento 1: Archivo input
+# Argumento 2: metodo -d Saca diccionario despues de hacer el vector
+
+args = sys.argv
+if (len(args) == 2):
+    with open(args[1], 'rb') as load:
+        a = pickle.load(load)
+    data = rawToVector(a[1])
+    dictionary = getDictionary(data)
+
+    with open('results/preprocessing/dataBoW', 'wb') as picklefile:
+        pickle.dump(data, picklefile)
+    print("Bag of Words guardado")
+    with open('results/preprocessing/dictionary', 'wb') as picklefile2:
+        pickle.dump(dictionary, picklefile2)
+    print("Diccionario guardado")
+
+    data = tfidf(data, dictionary)
+    with open('results/preprocessing/dataTFIDF', 'wb') as picklefile2:
+        pickle.dump(data, picklefile2)
+    print("TFIDF guardado")

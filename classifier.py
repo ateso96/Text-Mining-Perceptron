@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.dummy import DummyClassifier
 from sklearn.metrics import accuracy_score, precision_score, f1_score, classification_report, \
-    plot_confusion_matrix, confusion_matrix
+    plot_confusion_matrix
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.neural_network import MLPClassifier
 
@@ -19,10 +19,10 @@ def classifyMP(x_train, x_test, y_train, y_test):
     parameter_space = {
         'hidden_layer_sizes': [100, (100, 100)],
         'random_state': [1],
-        'learning_rate_init': 10.0 ** -np.arange(1, 2),
+        'learning_rate_init': 10.0 ** -np.arange(1, 3),
         'verbose': [True],
-        'activation': ['logistic', 'relu'],
-        'alpha': 10.0 ** -np.arange(1, 2),
+        'activation': ['identity', 'logistic','relu','tanh'],
+        'alpha': 10.0 ** -np.arange(1, 3),
         'tol': [1e-2],
         'early_stopping': [True],
         'solver': ['sgd', 'adam'],
@@ -50,7 +50,7 @@ def classifyMP(x_train, x_test, y_train, y_test):
     predictions = perceptron.predict(x_test)
 
     results += "\n---------------------------------------"
-    results += "\t EVALUATION SCORES"
+    results += "\n EVALUATION SCORES"
     results += "\n---------------------------------------"
     results += "\n--> Accuraccy: " + str(accuracy_score(y_test, predictions))
     results += "\n--> F1-Score: " + str(f1_score(y_test, predictions, average='weighted'))
@@ -72,19 +72,15 @@ def classifyMP(x_train, x_test, y_train, y_test):
 
     plt.savefig('results/matrix.png')
 
-    for row_index in range(len(predictions)):
-        results += "\n #" + str(row_index) + " has been classified as " + predictions[row_index] + " and should be " + \
-                   y_test[row_index] + "\n"
-
-    with open('results/resultados.txt', 'wb') as picklefile:
+    with open('results/classifier/resultados.txt', 'wb') as picklefile:
         pickle.dump(results, picklefile)
 
-    with open('results/modeloPerceptron', 'wb') as picklefile:
+    with open('results/classifier/modeloPerceptron', 'wb') as picklefile:
         pickle.dump(perceptron, picklefile)
 
 
 def makePredictionsPerceptron(data):
-    with open('results/modeloPerceptron', 'rb') as training_model:
+    with open('results/classifier/modeloPerceptron', 'rb') as training_model:
         model = pickle.load(training_model)
     return model.predict(data)
 
@@ -101,7 +97,7 @@ def classifyBaseline(x_train, x_test, y_train, y_test):
     predictions = cls.predict(x_test)
 
     results += "\n---------------------------------------"
-    results += "\t EVALUATION SCORES"
+    results += "\n EVALUATION SCORES"
     results += "\n---------------------------------------"
     results += "\n--> Accuraccy: " + str(accuracy_score(y_test, predictions))
     results += "\n--> F1-Score: " + str(f1_score(y_test, predictions, average='weighted'))
@@ -121,14 +117,10 @@ def classifyBaseline(x_train, x_test, y_train, y_test):
         print(title)
         print(disp.confusion_matrix)
 
-    for row_index in range(len(predictions)):
-        results += "\n #" + str(row_index) + " has been classified as " + predictions[row_index] + " and should be " + \
-                   y_test[row_index] + "\n"
-
     plt.savefig('results/matrixBaseline.png')
 
-    with open('results/resultadosBaseline.txt', 'wb') as picklefile:
+    with open('results/classifier/resultadosBaseline.txt', 'wb') as picklefile:
         pickle.dump(results, picklefile)
 
-    with open('results/modeloBaseline', 'wb') as picklefile:
+    with open('results/classifier/modeloBaseline', 'wb') as picklefile:
         pickle.dump(cls, picklefile)
