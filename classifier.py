@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.dummy import DummyClassifier
 from sklearn.metrics import accuracy_score, precision_score, f1_score, classification_report, \
-    plot_confusion_matrix
+    plot_confusion_matrix, confusion_matrix
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.neural_network import MLPClassifier
 
@@ -55,7 +55,7 @@ def classifyMP(x_train, x_test, y_train, y_test):
     results += "\n--> Accuraccy: " + str(accuracy_score(y_test, predictions))
     results += "\n--> F1-Score: " + str(f1_score(y_test, predictions, average='weighted'))
     results += "\n--> Precision: " + str(precision_score(y_test, predictions, average='weighted'))
-    results += "\n--> Recall: " + str(precision_score(y_test, predictions, average='weighted') + '\n')
+    results += "\n--> Recall: " + str(precision_score(y_test, predictions, average='weighted')) + '\n'
 
     results += "\n--> Classification Report: \n" + classification_report(y_test, predictions)
 
@@ -69,34 +69,11 @@ def classifyMP(x_train, x_test, y_train, y_test):
 
         print(title)
         print(disp.confusion_matrix)
-        matrix = disp.confusion_matrix
 
     plt.savefig('results/matrix.png')
 
-    FP = matrix.sum(axis=0) - np.diag(matrix)
-    FN = matrix.sum(axis=1) - np.diag(matrix)
-    TP = np.diag(matrix)
-    TN = matrix.values.sum() - (FP + FN + TP)
-
-    # Sensitivity, hit rate, recall, or true positive rate
-    TPR = TP / (TP + FN)
-    # Specificity or true negative rate
-    TNR = TN / (TN + FP)
-    # False positive rate
-    FPR = FP / (FP + TN)
-    # False negative rate
-    FNR = FN / (TP + FN)
-
-    results += "\n---------------------------------------"
-    results += "\t PREDICTIONS RESULTS"
-    results += "\n---------------------------------------"
-    results += "\n--> TPR: " + TPR
-    results += "\n--> TNR: " + TNR
-    results += "\n--> FPR: " + FPR
-    results += "\n--> FNR: " + FNR + "\n"
-
     for row_index in range(len(predictions)):
-        results += "\n #" + row_index + " has been classified as " + predictions[row_index] + " and should be " + \
+        results += "\n #" + str(row_index) + " has been classified as " + predictions[row_index] + " and should be " + \
                    y_test[row_index] + "\n"
 
     with open('results/resultados.txt', 'wb') as picklefile:
@@ -129,7 +106,7 @@ def classifyBaseline(x_train, x_test, y_train, y_test):
     results += "\n--> Accuraccy: " + str(accuracy_score(y_test, predictions))
     results += "\n--> F1-Score: " + str(f1_score(y_test, predictions, average='weighted'))
     results += "\n--> Precision: " + str(precision_score(y_test, predictions, average='weighted'))
-    results += "\n--> Recall: " + str(precision_score(y_test, predictions, average='weighted') + '\n')
+    results += "\n--> Recall: " + str(precision_score(y_test, predictions, average='weighted')) + '\n'
 
     results += "\n--> Classification Report: \n" + classification_report(y_test, predictions)
 
@@ -143,32 +120,9 @@ def classifyBaseline(x_train, x_test, y_train, y_test):
 
         print(title)
         print(disp.confusion_matrix)
-        matrix = disp.confusion_matrix
-
-    FP = matrix.sum(axis=0) - np.diag(matrix)
-    FN = matrix.sum(axis=1) - np.diag(matrix)
-    TP = np.diag(matrix)
-    TN = matrix.values.sum() - (FP + FN + TP)
-
-    # Sensitivity, hit rate, recall, or true positive rate
-    TPR = TP / (TP + FN)
-    # Specificity or true negative rate
-    TNR = TN / (TN + FP)
-    # False positive rate
-    FPR = FP / (FP + TN)
-    # False negative rate
-    FNR = FN / (TP + FN)
-
-    results += "\n---------------------------------------"
-    results += "\t PREDICTIONS RESULTS"
-    results += "\n---------------------------------------"
-    results += "\n--> TPR: " + TPR
-    results += "\n--> TNR: " + TNR
-    results += "\n--> FPR: " + FPR
-    results += "\n--> FNR: " + FNR + "\n"
 
     for row_index in range(len(predictions)):
-        results += "\n #" + row_index + " has been classified as " + predictions[row_index] + " and should be " + \
+        results += "\n #" + str(row_index) + " has been classified as " + predictions[row_index] + " and should be " + \
                    y_test[row_index] + "\n"
 
     plt.savefig('results/matrixBaseline.png')
